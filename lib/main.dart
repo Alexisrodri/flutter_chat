@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+void main() => runApp(const MyApp());
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Material App',
       home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+        appBar: AppBar(
+          title: const Text('Material App Bar'),
+        ),
+        body:  Center(
+          child: Column(
+            children: [
+              const Text('Hello World'),
+              Image.asset('assets/sms.png')
+            ],
+          ),
         ),
       ),
     );
