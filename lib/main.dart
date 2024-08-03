@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/routes/app_router.dart';
 
 void main() => runApp(const MyApp());
 
@@ -7,22 +8,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Material App Bar'),
-        ),
-        body:  Center(
-          child: Column(
-            children: [
-              const Text('Hello World'),
-              Image.asset('assets/sms.png')
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
