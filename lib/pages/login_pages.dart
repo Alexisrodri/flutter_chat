@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/widgets/widgets.dart';
 
 class LoginPages extends StatelessWidget {
    
@@ -53,12 +54,17 @@ class _Form extends StatefulWidget {
 class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const TextField(),
-        const TextField(),
-        ElevatedButton(onPressed: (){}, child:const Text('Click') )
-      ],
+    return Container(
+      margin: const EdgeInsetsDirectional.only(top: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 60),
+      child: const Column(
+        children: [
+           CustomInput()
+          // const TextField(),
+          //Hacer Botono
+          // ElevatedButton(onPressed: (){}, child:const Text('Click') )
+        ],
+      ),
     );
   }
 }
