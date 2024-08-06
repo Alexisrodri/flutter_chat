@@ -13,9 +13,17 @@ class LoginPages extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const _Logo(),
+              const Logo(src: 'assets/sms.png',label: 'ChatApp',),
               _Form(),
-              _Labels(),
+              const Labels(
+                text:'¿No tienes cuenta?',
+                weight: FontWeight.w200,
+                secondText: 'Crea una ahora',
+                secondColor: Colors.blue,
+                secondSize:18,
+                secondWeight: FontWeight.bold,
+              ),
+              // const Labels(text:'Crea una ahora',size: 18,color: Colors.blue,weight:FontWeight.bold,),
               const Text(
                 'Términos y condiciones',
                 style: TextStyle(fontWeight: FontWeight.w200),
@@ -26,31 +34,7 @@ class LoginPages extends StatelessWidget {
   }
 }
 
-class _Logo extends StatelessWidget {
-  const _Logo();
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 170,
-        margin: const EdgeInsets.only(top: 50),
-        child: Column(
-          children: [
-            Image.asset('assets/sms.png'),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              'ChatApp',
-              style: TextStyle(fontSize: 30),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _Form extends StatefulWidget {
   @override
@@ -89,27 +73,4 @@ class __FormState extends State<_Form> {
   }
 }
 
-class _Labels extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          '¿No tienes cuenta?',
-          style: TextStyle(
-              color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w300),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          'Crea una ahora',
-          style: TextStyle(
-              color: Colors.blue[600],
-              fontSize: 18,
-              fontWeight: FontWeight.bold),
-        )
-      ],
-    );
-  }
-}
+
