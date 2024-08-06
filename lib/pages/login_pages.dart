@@ -30,8 +30,9 @@ class _Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox(
+      child: Container(
         width: 170,
+        margin:const EdgeInsets.only(top:50),
         child: Column(
           children: [
             Image.asset('assets/sms.png'),
