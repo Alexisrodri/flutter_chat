@@ -56,10 +56,11 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsetsDirectional.only(top: 40),
-      padding: const EdgeInsets.symmetric(horizontal: 60),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: const Column(
         children: [
-           CustomInput()
+           CustomInput(),
+           CustomInput(),
           // const TextField(),
           //Hacer Botono
           // ElevatedButton(onPressed: (){}, child:const Text('Click') )
