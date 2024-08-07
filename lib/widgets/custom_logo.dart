@@ -4,7 +4,11 @@ class Logo extends StatelessWidget {
   final String src;
   final String label;
 
-  const Logo({super.key, required this.src, required this.label});
+  const Logo({
+    super.key, 
+    required this.src, 
+    required this.label
+  });
 
   @override
   Widget build(BuildContext context) {

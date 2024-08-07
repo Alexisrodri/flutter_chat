@@ -13,14 +13,17 @@ class LoginPages extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Logo(src: 'assets/sms.png',label: 'ChatApp',),
+              const Logo(
+                src: 'assets/sms.png',
+                label: 'ChatApp',
+              ),
               _Form(),
               const Labels(
-                text:'¿No tienes cuenta?',
+                text: '¿No tienes cuenta?',
                 weight: FontWeight.w200,
                 secondText: 'Crea una ahora',
                 secondColor: Colors.blue,
-                secondSize:18,
+                secondSize: 18,
                 secondWeight: FontWeight.bold,
               ),
               // const Labels(text:'Crea una ahora',size: 18,color: Colors.blue,weight:FontWeight.bold,),
@@ -33,8 +36,6 @@ class LoginPages extends StatelessWidget {
         ));
   }
 }
-
-
 
 class _Form extends StatefulWidget {
   @override
@@ -49,7 +50,7 @@ class __FormState extends State<_Form> {
     return Container(
       margin: const EdgeInsetsDirectional.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
-      child:  Column(
+      child: Column(
         children: [
           CustomInput(
             textController: emailCtrl,
@@ -64,13 +65,15 @@ class __FormState extends State<_Form> {
             icon: Icons.lock_outline_rounded,
             type: TextInputType.visiblePassword,
           ),
-          // const TextField(),
-          //Hacer Botono
-          ElevatedButton(onPressed: (){}, child:const Text('Click') )
+          CustomButtom(
+            text: 'Ingrese',
+            background: Colors.blue,
+            onPress: () {
+              debugPrint('Íngrese::Email::${emailCtrl.text},Password::${passCtrl.text}');
+            },
+          )
         ],
       ),
     );
   }
 }
-
-
