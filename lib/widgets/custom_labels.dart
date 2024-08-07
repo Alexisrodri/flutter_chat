@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Labels extends StatelessWidget {
   final String text;
@@ -9,17 +10,19 @@ class Labels extends StatelessWidget {
   final double? secondSize;
   final Color? secondColor;
   final FontWeight? secondWeight;
+  final String route;
 
   const Labels(
       {super.key,
       required this.text,
       this.size = 15,
       this.color = Colors.black,
-      this.weight = FontWeight.normal, 
+      this.weight = FontWeight.normal,
       this.secondText,
-      this.secondSize = 15, 
-      this.secondColor = Colors.black, 
-      this.secondWeight = FontWeight.normal
+      this.secondSize = 15,
+      this.secondColor = Colors.black,
+      this.secondWeight = FontWeight.normal,
+      this.route = ''
     });
 
   @override
@@ -32,11 +35,17 @@ class Labels extends StatelessWidget {
           text,
           style: TextStyle(color: color, fontSize: size, fontWeight: weight),
         ),
-        if(secondText != null) 
-        Text(
-          secondText!,
-          style: TextStyle(color: secondColor, fontSize: secondSize, fontWeight: secondWeight),
-        ),
+        if (secondText != null)
+          GestureDetector(
+            onTap: () => context.go(route),
+            child: Text(
+              secondText!,
+              style: TextStyle(
+                  color: secondColor,
+                  fontSize: secondSize,
+                  fontWeight: secondWeight),
+            ),
+          ),
       ],
     );
   }

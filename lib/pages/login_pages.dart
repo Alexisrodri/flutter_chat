@@ -10,28 +10,35 @@ class LoginPages extends StatelessWidget {
         backgroundColor: const Color(0xfff2f2f2),
         body: SafeArea(
           // minimum: EdgeInsets.only(top: ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Logo(
-                src: 'assets/sms.png',
-                label: 'ChatApp',
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Logo(
+                    src: 'assets/sms.png',
+                    label: 'ChatApp',
+                  ),
+                  _Form(),
+                  const Labels(
+                    text: '¿No tienes cuenta?',
+                    weight: FontWeight.w200,
+                    secondText: 'Crea una ahora',
+                    secondColor: Colors.blue,
+                    secondSize: 18,
+                    secondWeight: FontWeight.bold,
+                    route: '/register',
+                  ),
+                  // const Labels(text:'Crea una ahora',size: 18,color: Colors.blue,weight:FontWeight.bold,),
+                  const Text(
+                    'Términos y condiciones',
+                    style: TextStyle(fontWeight: FontWeight.w200),
+                  )
+                ],
               ),
-              _Form(),
-              const Labels(
-                text: '¿No tienes cuenta?',
-                weight: FontWeight.w200,
-                secondText: 'Crea una ahora',
-                secondColor: Colors.blue,
-                secondSize: 18,
-                secondWeight: FontWeight.bold,
-              ),
-              // const Labels(text:'Crea una ahora',size: 18,color: Colors.blue,weight:FontWeight.bold,),
-              const Text(
-                'Términos y condiciones',
-                style: TextStyle(fontWeight: FontWeight.w200),
-              )
-            ],
+            ),
           ),
         ));
   }
