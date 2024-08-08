@@ -3,7 +3,7 @@ import 'package:flutter_chat/pages/pages.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/users',
+  initialLocation: '/chat',
   routes: [
     GoRoute(
       path: '/users',
