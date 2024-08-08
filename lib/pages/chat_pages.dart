@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_chat/widgets/chat_message.dart';
 
 class ChatPages extends StatefulWidget {
   const ChatPages({super.key});
@@ -13,6 +15,15 @@ class ChatPages extends StatefulWidget {
 class _ChatPagesState extends State<ChatPages> {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
+  final List<ChatMessage> _messages = [
+    const ChatMessage(texto: 'Hello world', uid: '123'),
+    const ChatMessage(texto: 'Good', uid: '123'),
+    const ChatMessage(texto: 'Nice bro', uid: '122'),
+    const ChatMessage(texto: 'Nice', uid: '123'),
+    const ChatMessage(texto: 'Nice dick', uid: '121'),
+    const ChatMessage(texto: 'Nice', uid: '123'),
+    const ChatMessage(texto: 'Bro', uid: '122'),
+  ];
   bool _estaEscribiendo = false;
   @override
   Widget build(BuildContext context) {
@@ -46,9 +57,8 @@ class _ChatPagesState extends State<ChatPages> {
               Flexible(
                   child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Text("$index");
-                },
+                itemCount: _messages.length,
+                itemBuilder: (context, index) => _messages[index],
                 reverse: true,
               )),
               const Divider(
@@ -92,10 +102,10 @@ class _ChatPagesState extends State<ChatPages> {
             margin: const EdgeInsets.symmetric(horizontal: 4),
             child: Platform.isIOS
                 ? CupertinoButton(
-                  onPressed: _estaEscribiendo
-                            ? () => _handleSubmit(_textController.text.trim())
-                            : null,
-                  child: const Text('.'), 
+                    onPressed: _estaEscribiendo
+                        ? () => _handleSubmit(_textController.text.trim())
+                        : null,
+                    child: const Text('.'),
                   )
                 : IconTheme(
                     data: IconThemeData(color: Colors.blue[400]),
@@ -117,10 +127,12 @@ class _ChatPagesState extends State<ChatPages> {
   }
 
   void _handleSubmit(String text) {
-    if (text.isEmpty) return; // No hacer nada si el texto está vacío
-    debugPrint('mensaje::$text'); // Mostrar el mensaje en la consola
+    if (text.isEmpty) return;
+    debugPrint('mensaje::$text');
+    final newMessage = ChatMessage(texto: text, uid: '123');
+    _messages.insert(0, newMessage); 
     setState(() {
-      _estaEscribiendo = false; // Agregar el mensaje a la lista
+      _estaEscribiendo = false;
     });
     _focusNode.requestFocus();
     _textController.clear();
