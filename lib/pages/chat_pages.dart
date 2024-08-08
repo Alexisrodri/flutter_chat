@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_chat/widgets/chat_message.dart';
 
 class ChatPages extends StatefulWidget {
@@ -12,18 +11,10 @@ class ChatPages extends StatefulWidget {
   State<ChatPages> createState() => _ChatPagesState();
 }
 
-class _ChatPagesState extends State<ChatPages> {
+class _ChatPagesState extends State<ChatPages> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
-  final List<ChatMessage> _messages = [
-    const ChatMessage(texto: 'Hello world', uid: '123'),
-    const ChatMessage(texto: 'Good', uid: '123'),
-    const ChatMessage(texto: 'Nice bro', uid: '122'),
-    const ChatMessage(texto: 'Nice', uid: '123'),
-    const ChatMessage(texto: 'Nice dick', uid: '121'),
-    const ChatMessage(texto: 'Nice', uid: '123'),
-    const ChatMessage(texto: 'Bro', uid: '122'),
-  ];
+  final List<ChatMessage> _messages = [];
   bool _estaEscribiendo = false;
   @override
   Widget build(BuildContext context) {
@@ -129,12 +120,27 @@ class _ChatPagesState extends State<ChatPages> {
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
     debugPrint('mensaje::$text');
-    final newMessage = ChatMessage(texto: text, uid: '123');
-    _messages.insert(0, newMessage); 
+    final newMessage = ChatMessage(
+      texto: text,
+      uid: '123',
+      animationController: AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 400)),
+    );
+    _messages.insert(0, newMessage);
+    newMessage.animationController.forward();
     setState(() {
       _estaEscribiendo = false;
     });
-    _focusNode.requestFocus();
+    // _focusNode.requestFocus();
     _textController.clear();
+  }
+
+  @override
+  void dispose() {
+    //TODO: Socket off
+    for (ChatMessage message in _messages) {
+      message.animationController.dispose();
+    }
+    super.dispose();
   }
 }
