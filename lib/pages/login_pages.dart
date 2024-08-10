@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/services/auth_services.dart';
 import 'package:flutter_chat/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class LoginPages extends StatelessWidget {
   const LoginPages({super.key});
@@ -76,7 +78,10 @@ class __FormState extends State<_Form> {
             text: 'Ingrese',
             background: Colors.blue,
             onPress: () {
-              debugPrint('Íngrese::Email::${emailCtrl.text},Password::${passCtrl.text}');
+              // debugPrint('Íngrese::Email::${emailCtrl.text},Password::${passCtrl.text}');
+              final authService =
+                  Provider.of<AuthService>(context, listen: false);
+              authService.login(emailCtrl.text, passCtrl.text);
             },
           )
         ],
