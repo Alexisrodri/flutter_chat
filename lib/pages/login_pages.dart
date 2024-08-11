@@ -78,7 +78,7 @@ class __FormState extends State<_Form> {
           CustomButtom(
             text: 'Ingrese',
             background: Colors.blue,
-            onPress: authService.autenticate
+            onPress: authService.authenticate
                 ? null
                 : () {
                     FocusScope.of(context).unfocus();
