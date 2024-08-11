@@ -56,6 +56,7 @@ class __FormState extends State<_Form> {
   final passCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: const EdgeInsetsDirectional.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -77,12 +78,13 @@ class __FormState extends State<_Form> {
           CustomButtom(
             text: 'Ingrese',
             background: Colors.blue,
-            onPress: () {
-              // debugPrint('Íngrese::Email::${emailCtrl.text},Password::${passCtrl.text}');
-              final authService =
-                  Provider.of<AuthService>(context, listen: false);
-              authService.login(emailCtrl.text, passCtrl.text);
-            },
+            onPress: authService.autenticate
+                ? null
+                : () {
+                    FocusScope.of(context).unfocus();
+                    authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+                  },
           )
         ],
       ),

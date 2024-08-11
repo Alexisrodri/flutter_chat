@@ -8,18 +8,32 @@ import 'package:flutter_chat/models/user_response.dart';
 
 class AuthService with ChangeNotifier {
   late Usuario usuario;
+  bool _authenticate = false;
+
+  bool get autenticate => _authenticate;
+
+  set autenticate(bool value) {
+    _authenticate = value;
+    notifyListeners();
+  }
 
   Future login(String email, String password) async {
+    autenticate = true;
+
     final data = {'email': email, 'password': password};
 
     final resp = await http.post(Uri.parse('${Enviroments.apiUrl}/login'),
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
+    // if(resp)
+
+    debugPrint(resp.body);
+    // debugPrint(resp.statusCode.toString());
+
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
       usuario = loginResponse.usuario;
     }
-
-    debugPrint(resp.body);
+    autenticate = false;
   }
 }
