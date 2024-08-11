@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/helpers/alert_dialog.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:flutter_chat/widgets/widgets.dart';
 import 'package:provider/provider.dart';
