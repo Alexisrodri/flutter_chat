@@ -26,7 +26,7 @@ class AuthService with ChangeNotifier {
     baseUrl: Enviroments.apiUrl,
   ));
 
-  Future<Usuario> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     authenticate = true;
 
     try {
@@ -39,7 +39,7 @@ class AuthService with ChangeNotifier {
       usuario = loginResponse;
       print(response.data);
       authenticate = false;
-      return usuario;
+      return true;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw Exception(
@@ -48,7 +48,8 @@ class AuthService with ChangeNotifier {
       if (e.type == DioExceptionType.connectionTimeout) {
         throw Exception('Revisar conexión a internet');
       }
-      throw Exception();
+      authenticate = false;
+      return false;
     } catch (e) {
       throw Exception();
     }

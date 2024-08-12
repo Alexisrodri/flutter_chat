@@ -81,10 +81,14 @@ class __FormState extends State<_Form> {
             background: Colors.blue,
             onPress: authService.authenticate
                 ? null
-                : () {
+                : () async {
                     FocusScope.of(context).unfocus();
-                    authService.login(
+                    final loginOk = await authService.login(
                         emailCtrl.text.trim(), passCtrl.text.trim());
+                    if (loginOk) {
+                    } else {
+                      customDialog(context, 'Login Incorrecto', 'Credenciales incorrectas');
+                    }
                   },
           )
         ],
