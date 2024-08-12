@@ -24,7 +24,7 @@ class CustomButtom extends StatelessWidget {
         height: 55,
         child: Center(
           child: Text(
-            'Ingrese',
+            text,
             style: TextStyle(color: textColor, fontSize: 18),
           ),
         ),

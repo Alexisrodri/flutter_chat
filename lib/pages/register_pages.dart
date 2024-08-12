@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/helpers/alert_dialog.dart';
 import 'package:flutter_chat/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../services/auth_services.dart';
 
 class RegisterPages extends StatelessWidget {
   const RegisterPages({super.key});
@@ -55,6 +60,7 @@ class __FormState extends State<_Form> {
   final passCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: const EdgeInsetsDirectional.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -80,11 +86,25 @@ class __FormState extends State<_Form> {
             type: TextInputType.visiblePassword,
           ),
           CustomButtom(
-            text: 'Ingrese',
+            text: 'Registrar',
             background: Colors.blue,
-            onPress: () {
-              debugPrint('Íngrese::Email::${emailCtrl.text},Password::${passCtrl.text}');
-            },
+            onPress:
+              authService.authenticate
+                  ? null
+                  : () async {
+                      FocusScope.of(context).unfocus();
+                      await authService
+                          .register(nameCtrl.text.trim(),emailCtrl.text.trim(), passCtrl.text.trim())
+                          .then((login) => {
+                                if (login)
+                                  {context.go('/users')}
+                                else
+                                  {
+                                    customDialog(context, 'Login Error',
+                                        'Revise sus credenciales')
+                                  }
+                              });
+                    }
           )
         ],
       ),

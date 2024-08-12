@@ -44,7 +44,6 @@ class AuthService with ChangeNotifier {
 
   Future<bool> login(String email, String password) async {
     authenticate = true;
-
     try {
       final response = await dio.post(
         '/login',
@@ -72,8 +71,31 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<bool> register(String email, String password) async {
-    throw Exception();
+  Future<bool> register(String nombre, String email, String password) async {
+    authenticate = true;
+    try {
+      final resp = await dio.post('/login/new',
+          data: {'nombre': nombre, 'email': email, 'password': password},
+          options: Options(headers: {'Content-Type': 'application/json'}));
+      final loginResponse = loginResponseFromJson(resp.data);
+      usuario = loginResponse.usuario;
+      saveToken(loginResponse.token);
+      print(resp.data);
+      authenticate = false;
+      return true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw Exception(
+            e.response?.data['message'] ?? 'Credenciales incorrectas');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception('Revisar conexión a internet');
+      }
+      authenticate = false;
+      return false;
+    } catch (e) {
+      throw Exception();
+    }
   }
 
   Future saveToken(String token) async {
