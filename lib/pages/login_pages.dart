@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat/helpers/alert_dialog.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:flutter_chat/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class LoginPages extends StatelessWidget {
@@ -83,12 +84,13 @@ class __FormState extends State<_Form> {
                 ? null
                 : () async {
                     FocusScope.of(context).unfocus();
-                    final loginOk = await authService.login(
-                        emailCtrl.text.trim(), passCtrl.text.trim());
-                    if (loginOk) {
-                    } else {
-                      customDialog(context, 'Login Incorrecto', 'Credenciales incorrectas');
-                    }
+                    await authService
+                        .login(emailCtrl.text.trim(), passCtrl.text.trim())
+                        .then((login) => {if (login) {
+                          context.go('/users')
+                        } else {
+                          customDialog(context, 'Login Error', 'Revise sus credenciales')
+                        }});
                   },
           )
         ],

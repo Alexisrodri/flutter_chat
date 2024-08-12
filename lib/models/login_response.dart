@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter_chat/models/user_response.dart';
 
 
-LoginResponse loginResponseFromJson(String str) => LoginResponse.fromJson(json.decode(str));
+LoginResponse loginResponseFromJson(Map<String, dynamic> json) => LoginResponse.fromJson(json);
 
 String loginResponseToJson(LoginResponse data) => json.encode(data.toJson());
 

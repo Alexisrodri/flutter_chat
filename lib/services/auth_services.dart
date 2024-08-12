@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/global/enviroments.dart';
-import 'package:flutter_chat/mappers/user_mapper.dart';
+import 'package:flutter_chat/models/login_response.dart';
 import 'package:flutter_chat/models/user_response.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService with ChangeNotifier {
   late Usuario usuario;
   bool _authenticate = false;
   late String _error;
+
+  final _storage = const FlutterSecureStorage();
 
   bool get authenticate => _authenticate;
   String get error => _error;
@@ -20,6 +23,19 @@ class AuthService with ChangeNotifier {
   set error(String value) {
     _error = value;
     notifyListeners();
+  }
+
+  //Getter del token estaticos
+
+  static Future<String> getToken() async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'token');
+    return token!;
+  }
+
+  static Future<void> deleteToken() async {
+    const storage = FlutterSecureStorage();
+    await storage.delete(key: 'token');
   }
 
   final dio = Dio(BaseOptions(
@@ -35,8 +51,9 @@ class AuthService with ChangeNotifier {
         data: {'email': email, 'password': password},
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
-      final loginResponse = UserMapper.userJsonToEntity(response.data);
-      usuario = loginResponse;
+      final loginResponse = loginResponseFromJson(response.data);
+      usuario = loginResponse.usuario;
+      saveToken(loginResponse.token);
       print(response.data);
       authenticate = false;
       return true;
@@ -53,5 +70,17 @@ class AuthService with ChangeNotifier {
     } catch (e) {
       throw Exception();
     }
+  }
+
+  Future<bool> register(String email, String password) async {
+    throw Exception();
+  }
+
+  Future saveToken(String token) async {
+    return await _storage.write(key: 'token', value: token);
+  }
+
+  Future logout() async {
+    await _storage.delete(key: 'token');
   }
 }
