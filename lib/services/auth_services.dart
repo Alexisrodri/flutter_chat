@@ -50,7 +50,6 @@ class AuthService with ChangeNotifier {
         data: {'email': email, 'password': password},
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
-      print('Response login::${response.data}');
       final loginResponse = loginResponseFromJson(response.data);
       usuario = loginResponse.usuario;
       await saveToken(loginResponse.token);
@@ -67,7 +66,6 @@ class AuthService with ChangeNotifier {
       authenticate = false;
       return false;
     } catch (e) {
-      print(e);
       throw Exception();
     }
   }
@@ -80,7 +78,6 @@ class AuthService with ChangeNotifier {
         data: {'nombre': nombre, 'email': email, 'password': password},
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
-      print('Response register::${response.data}');
       final loginResponse = loginResponseFromJson(response.data);
       usuario = loginResponse.usuario;
       await saveToken(loginResponse.token);
@@ -96,36 +93,23 @@ class AuthService with ChangeNotifier {
       }
       return true;
     } catch (e) {
-      print(e);
       return false;
     }
   }
 
   Future<bool> isLoggedIn() async {
     final token = await _storage.read(key: 'token');
-    print(token);
-    try {
-      final response = await dio.get(
-        '/login/renew',
-        options: Options(
-            headers: {'Content-Type': 'application/json', 'x-token': token}),
-      );
+    if (token != null) {
+    final response = await dio.get(
+      '/login/renew',
+      options: Options(
+          headers: {'Content-Type': 'application/json', 'x-token': token}),
+    );
       final loginResponse = loginResponseFromJson(response.data);
       usuario = loginResponse.usuario;
-      print(response.data);
       await saveToken(loginResponse.token);
       return true;
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        throw Exception(
-            e.response?.data['message'] ?? 'Credenciales incorrectas');
-      }
-      if (e.type == DioExceptionType.connectionTimeout) {
-        throw Exception('Revisar conexión a internet');
-      }
-      return true;
-    } catch (e) {
-      print(e);
+    }else {
       logout();
       return false;
     }

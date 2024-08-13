@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/models/usuario.dart';
+import 'package:flutter_chat/services/auth_services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UsersPages extends StatefulWidget {
@@ -39,14 +42,18 @@ class _UsersPagesState extends State<UsersPages> {
 
   @override
   Widget build(BuildContext context) {
+    final usuario = Provider.of<AuthService>(context).usuario;
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Mi Nombre'),
+          title: Text(usuario.nombre),
           centerTitle: true,
           elevation: 1,
           // backgroundColor: color,
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.go('/login');
+              AuthService.deleteToken();
+            },
             icon: const Icon(
               Icons.exit_to_app_rounded,
               color: Colors.blueAccent,
@@ -66,7 +73,6 @@ class _UsersPagesState extends State<UsersPages> {
           controller: _refreshController,
           onRefresh: _cargarUsuarios,
           header: WaterDropHeader(
-            
             complete: Icon(
               Icons.check,
               color: Colors.blue[400],
@@ -104,9 +110,8 @@ class _UsersPagesState extends State<UsersPages> {
     );
   }
 
-  _cargarUsuarios() async{
-      await Future.delayed(const Duration(milliseconds: 200));
-      _refreshController.refreshCompleted();
-    }
-  
+  _cargarUsuarios() async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    _refreshController.refreshCompleted();
+  }
 }

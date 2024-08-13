@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat/pages/pages.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +13,7 @@ class LoadingPage extends StatelessWidget {
         future: checkLoginState(context),
         builder: (context, snapshot) {
           return const Center(
-            child: Text('Waiting...'),
+            child: Text('espere...'),
           );
         },
       ),
@@ -25,10 +24,10 @@ class LoadingPage extends StatelessWidget {
     final authService = Provider.of<AuthService>(context, listen: false);
 
     final authenticate = await authService.isLoggedIn().then((auth) {
-      if (auth) {
-        context.go('/users');
-      } else {
+      if (!auth) {
         context.go('/login');
+      } else {
+        context.go('/users');
       }
     });
   }
