@@ -86,25 +86,24 @@ class __FormState extends State<_Form> {
             type: TextInputType.visiblePassword,
           ),
           CustomButtom(
-            text: 'Registrar',
+            text: 'Crear cuenta',
             background: Colors.blue,
             onPress:
               authService.authenticate
-                  ? null
-                  : () async {
-                      FocusScope.of(context).unfocus();
-                      await authService
-                          .register(nameCtrl.text.trim(),emailCtrl.text.trim(), passCtrl.text.trim())
-                          .then((login) => {
-                                if (login)
-                                  {context.go('/users')}
-                                else
-                                  {
-                                    customDialog(context, 'Login Error',
-                                        'Revise sus credenciales')
-                                  }
-                              });
-                    }
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
+                    await authService
+                        .register(
+                          nameCtrl.text.trim(),
+                          emailCtrl.text.trim(),
+                          passCtrl.text.trim())
+                        .then((login) => {if (login) {
+                          context.go('/users')
+                        } else {
+                          customDialog(context, 'Register Error', 'Error al registrarse')
+                        }});
+                  },
           )
         ],
       ),

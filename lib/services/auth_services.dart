@@ -50,10 +50,10 @@ class AuthService with ChangeNotifier {
         data: {'email': email, 'password': password},
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
+      print('Response login::${response.data}');
       final loginResponse = loginResponseFromJson(response.data);
       usuario = loginResponse.usuario;
-      saveToken(loginResponse.token);
-      print(response.data);
+      await saveToken(loginResponse.token);
       authenticate = false;
       return true;
     } on DioException catch (e) {
@@ -67,6 +67,7 @@ class AuthService with ChangeNotifier {
       authenticate = false;
       return false;
     } catch (e) {
+      print(e);
       throw Exception();
     }
   }
@@ -74,13 +75,15 @@ class AuthService with ChangeNotifier {
   Future<bool> register(String nombre, String email, String password) async {
     authenticate = true;
     try {
-      final resp = await dio.post('/login/new',
-          data: {'nombre': nombre, 'email': email, 'password': password},
-          options: Options(headers: {'Content-Type': 'application/json'}));
-      final loginResponse = loginResponseFromJson(resp.data);
+      final response = await dio.post(
+        '/login/new',
+        data: {'nombre': nombre, 'email': email, 'password': password},
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+      print('Response register::${response.data}');
+      final loginResponse = loginResponseFromJson(response.data);
       usuario = loginResponse.usuario;
-      saveToken(loginResponse.token);
-      print(resp.data);
+      await saveToken(loginResponse.token);
       authenticate = false;
       return true;
     } on DioException catch (e) {
@@ -91,10 +94,40 @@ class AuthService with ChangeNotifier {
       if (e.type == DioExceptionType.connectionTimeout) {
         throw Exception('Revisar conexión a internet');
       }
-      authenticate = false;
-      return false;
+      return true;
     } catch (e) {
-      throw Exception();
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> isLoggedIn() async {
+    final token = await _storage.read(key: 'token');
+    print(token);
+    try {
+      final response = await dio.get(
+        '/login/renew',
+        options: Options(
+            headers: {'Content-Type': 'application/json', 'x-token': token}),
+      );
+      final loginResponse = loginResponseFromJson(response.data);
+      usuario = loginResponse.usuario;
+      print(response.data);
+      await saveToken(loginResponse.token);
+      return true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw Exception(
+            e.response?.data['message'] ?? 'Credenciales incorrectas');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception('Revisar conexión a internet');
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      logout();
+      return false;
     }
   }
 
