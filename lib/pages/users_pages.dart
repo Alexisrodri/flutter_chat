@@ -59,16 +59,15 @@ class _UsersPagesState extends State<UsersPages> {
             },
             icon: const Icon(
               Icons.exit_to_app_rounded,
-              color: Colors.blueAccent,
+              color: Colors.redAccent,
             ),
           ),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 10),
-              child: const Icon(
-                Icons.check_circle,
-                color: Colors.green,
-              ),
+              child: socketService.serverStatus == ServerStatus.offline
+              ?const Icon(  Icons.wifi_tethering_off_rounded,color:Colors.red,)
+              :const Icon(  Icons.wifi_tethering,color:Colors.green,),
             )
           ],
         ),
