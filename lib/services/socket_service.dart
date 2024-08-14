@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/global/enviroments.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-// import 'package:socket_io_client/socket_io_client.dart';
 
 enum ServerStatus { offline, online, coonnecting }
 
@@ -11,18 +10,14 @@ class SocketService with ChangeNotifier {
   // Globalmente fuera de la funcion _initConfig;
   // Local: http://localhost||Ip del dispositivo:3000||puerto del server
 
-  final io.Socket _socket = io.io('https://socket-io-bands.onrender.com/',
-      io.OptionBuilder().setTransports(['websocket']).build());
+  final io.Socket _socket = io.io(Enviroments.socketUrl,
+      io.OptionBuilder().setTransports(['websocket']).enableForceNew().build());
 
   ServerStatus get serverStatus => _serverStatus;
   io.Socket get socket => _socket;
   get emit => _socket.emit;
 
-  SocketService() {
-    _initConfig();
-  }
-
-  void _initConfig() {
+  void connect() {
     _socket.onConnect((_) {
       debugPrint('Connect');
       _serverStatus = ServerStatus.online;
@@ -52,5 +47,9 @@ class SocketService with ChangeNotifier {
     //   debugPrint(payload.containsKey('mensaje2') ? payload['mensaje2'] : 'No found');
 
     // });
+  }
+
+  void disconnect() {
+    _socket.disconnected;
   }
 }

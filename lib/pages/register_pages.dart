@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/helpers/alert_dialog.dart';
+import 'package:flutter_chat/services/socket_service.dart';
 import 'package:flutter_chat/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +62,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     return Container(
       margin: const EdgeInsetsDirectional.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -99,6 +101,7 @@ class __FormState extends State<_Form> {
                           emailCtrl.text.trim(),
                           passCtrl.text.trim())
                         .then((login) => {if (login) {
+                          socketService.connect(),
                           context.go('/users')
                         } else {
                           customDialog(context, 'Register Error', 'Error al registrarse')

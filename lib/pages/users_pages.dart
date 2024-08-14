@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/models/usuario.dart';
 import 'package:flutter_chat/services/auth_services.dart';
+import 'package:flutter_chat/services/socket_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -43,6 +44,7 @@ class _UsersPagesState extends State<UsersPages> {
   @override
   Widget build(BuildContext context) {
     final usuario = Provider.of<AuthService>(context).usuario;
+    final socketService = Provider.of<SocketService>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(usuario.nombre),
@@ -51,6 +53,7 @@ class _UsersPagesState extends State<UsersPages> {
           // backgroundColor: color,
           leading: IconButton(
             onPressed: () {
+              socketService.disconnect();
               context.go('/login');
               AuthService.deleteToken();
             },
