@@ -9,12 +9,13 @@ class SocketService with ChangeNotifier {
   ServerStatus _serverStatus = ServerStatus.connecting;
   late io.Socket _socket;
 
-  ServerStatus get serverStatus => _serverStatus; 
+  ServerStatus get serverStatus => _serverStatus;
   io.Socket get socket => _socket;
   get emit => _socket.emit;
 
   void connect() async {
     final token = await AuthService.getToken();
+    debugPrint(token);
 
     _socket = io.io(
       Enviroments.socketUrl,

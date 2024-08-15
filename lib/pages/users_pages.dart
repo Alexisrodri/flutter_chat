@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat/models/usuario.dart';
+import 'package:flutter_chat/models/user_response.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:flutter_chat/services/socket_service.dart';
+import 'package:flutter_chat/services/usuarios_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -14,32 +15,34 @@ class UsersPages extends StatefulWidget {
 }
 
 class _UsersPagesState extends State<UsersPages> {
-  final usuarios = [
-    Usuario(
-        uid: '1', nombre: 'Alex', online: true, email: 'cesarr11@prueba.com'),
-    Usuario(
-        uid: '2',
-        nombre: 'Bianca',
-        online: false,
-        email: 'Bianca11@prueba.com'),
-    Usuario(
-        uid: '3', nombre: 'Cesar', online: true, email: 'Cesar11@prueba.com'),
-    Usuario(
-        uid: '4',
-        nombre: 'Daniela',
-        online: false,
-        email: 'Daniela11@prueba.com'),
-    Usuario(
-        uid: '5', nombre: 'Erick', online: true, email: 'Erick11@prueba.com'),
-    Usuario(
-        uid: '6',
-        nombre: 'Fernanda',
-        online: false,
-        email: 'Fernanda11@prueba.com'),
-  ];
+  // final usuarios = [
+  //   Usuario(
+  //       uid: '1', nombre: 'Alex', online: true, email: 'cesarr11@prueba.com'),
+  //   Usuario(
+  //       uid: '2',
+  //       nombre: 'Bianca',
+  //       online: false,
+  //       email: 'Bianca11@prueba.com'),
+  //   Usuario(
+  //       uid: '3', nombre: 'Cesar', online: true, email: 'Cesar11@prueba.com'),
+  //   Usuario(
+  //       uid: '4',
+  //       nombre: 'Daniela',
+  //       online: false,
+  //       email: 'Daniela11@prueba.com'),
+  //   Usuario(
+  //       uid: '5', nombre: 'Erick', online: true, email: 'Erick11@prueba.com'),
+  //   Usuario(
+  //       uid: '6',
+  //       nombre: 'Fernanda',
+  //       online: false,
+  //       email: 'Fernanda11@prueba.com'),
+  // ];
 
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  final usuarioService = UsuariosServices();
+  List<Usuario> usuarios = [];
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +69,20 @@ class _UsersPagesState extends State<UsersPages> {
             Container(
               margin: const EdgeInsets.only(right: 10),
               child: socketService.serverStatus == ServerStatus.offline
-              ?const Icon(  Icons.wifi_tethering_off_rounded,color:Colors.red,)
-              :const Icon(  Icons.wifi_tethering,color:Colors.green,),
+                  ? const Icon(
+                      Icons.wifi_tethering_off_rounded,
+                      color: Colors.red,
+                    )
+                  : const Icon(
+                      Icons.wifi_tethering,
+                      color: Colors.green,
+                    ),
             )
           ],
         ),
         body: SmartRefresher(
           controller: _refreshController,
-          onRefresh: _cargarUsuarios,
+          onRefresh: () => _cargarUsuarios(),
           header: WaterDropHeader(
             complete: Icon(
               Icons.check,
@@ -113,7 +122,9 @@ class _UsersPagesState extends State<UsersPages> {
   }
 
   _cargarUsuarios() async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    usuarios = await usuarioService.getUsuario();
+    setState(() {});
+    // await Future.delayed(const Duration(milliseconds: 200));
     _refreshController.refreshCompleted();
   }
 }
