@@ -42,26 +42,24 @@ class _ChatPagesState extends State<ChatPages> with TickerProviderStateMixin {
             ],
           ),
         ),
-        body: Container(
-          child: Column(
-            children: [
-              Flexible(
-                  child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) => _messages[index],
-                reverse: true,
-              )),
-              const Divider(
-                height: 1,
-              ),
-              SizedBox(
-                height: 100,
-                // color: Colors.amber,
-                child: _inputChat(),
-              )
-            ],
-          ),
+        body: Column(
+          children: [
+            Flexible(
+                child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) => _messages[index],
+              reverse: true,
+            )),
+            const Divider(
+              height: 1,
+            ),
+            SizedBox(
+              height: 100,
+              // color: Colors.amber,
+              child: _inputChat(),
+            )
+          ],
         ));
   }
 

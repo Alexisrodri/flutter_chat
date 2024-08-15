@@ -33,5 +33,6 @@ class LoadingPage extends StatelessWidget {
         context.go('/users');
       }
     });
+    debugPrint('authenticate::$authenticate');
   }
 }
