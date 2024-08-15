@@ -3,29 +3,27 @@ import 'package:flutter_chat/global/enviroments.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-enum ServerStatus { offline, online, coonnecting }
+enum ServerStatus { offline, online, connecting }
 
 class SocketService with ChangeNotifier {
-  ServerStatus _serverStatus = ServerStatus.coonnecting;
-  // io.Socket _socket; no se pudo inicializar la solucion fue inicializar la variable privada
-  // Globalmente fuera de la funcion _initConfig;
-  // Local: http://localhost||Ip del dispositivo:3000||puerto del server
+  ServerStatus _serverStatus = ServerStatus.connecting;
+  late io.Socket _socket;
 
-  final io.Socket _socket = io.io(Enviroments.socketUrl,
-      io.OptionBuilder()
-      .setExtraHeaders({})
-      .setTransports(['websocket'])
-      .enableForceNew()
-      .build()
-      // 'extraheaders':token;
-    );
-
-  ServerStatus get serverStatus => _serverStatus;
+  ServerStatus get serverStatus => _serverStatus; 
   io.Socket get socket => _socket;
   get emit => _socket.emit;
 
   void connect() async {
     final token = await AuthService.getToken();
+
+    _socket = io.io(
+      Enviroments.socketUrl,
+      io.OptionBuilder()
+          .setTransports(['websocket'])
+          .enableForceNew()
+          .setExtraHeaders({'x-token': token})
+          .build(),
+    );
 
     _socket.onConnect((_) {
       debugPrint('Connect');
@@ -39,26 +37,10 @@ class SocketService with ChangeNotifier {
       notifyListeners();
     });
 
-    // socket.on('nuevo-mensaje', (payload) {
-    //   //Recibir payload:String
-    //   // debugPrint('nuevo-Mensaje:: $payload');
-
-    //   //Recibir payload:Objeto-Map
-
-    //   debugPrint('nuevo-Mensaje');
-    //   debugPrint('nombre:  ${payload['nombre']}');
-    //   debugPrint('mensaje: ${payload['mensaje']}');
-
-    //   //En caso de no recibir un dato la app se "Cae" se debe de controlar esos errores.
-    //   // debugPrint('mensaje2: ${payload['mensaje2']}');
-
-    //   //Se debe de controlar si se recibe o no ese dato containsKey verifica si existe esa key
-    //   debugPrint(payload.containsKey('mensaje2') ? payload['mensaje2'] : 'No found');
-
-    // });
+    // Aquí puedes añadir otros eventos que quieras escuchar
   }
 
   void disconnect() {
-    _socket.disconnected;
+    _socket.disconnect();
   }
 }
