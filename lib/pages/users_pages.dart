@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/models/user_response.dart';
 import 'package:flutter_chat/services/auth_services.dart';
+import 'package:flutter_chat/services/chat_services.dart';
 import 'package:flutter_chat/services/socket_service.dart';
 import 'package:flutter_chat/services/usuarios_services.dart';
 import 'package:go_router/go_router.dart';
@@ -43,6 +44,12 @@ class _UsersPagesState extends State<UsersPages> {
       RefreshController(initialRefresh: false);
   final usuarioService = UsuariosServices();
   List<Usuario> usuarios = [];
+
+  @override
+  void initState() {
+    _cargarUsuarios();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +114,11 @@ class _UsersPagesState extends State<UsersPages> {
     return ListTile(
       title: Text(usuario.nombre),
       subtitle: Text(usuario.email),
+      onTap: () {
+        final chatService = Provider.of<ChatServices>(context,listen: false);
+        chatService.usuarioSelect = usuario;
+        context.push('/chat');
+      },
       leading: CircleAvatar(
         backgroundColor: Colors.blue[100],
         child: Text(usuario.nombre.substring(0, 2)),

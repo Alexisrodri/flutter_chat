@@ -100,13 +100,13 @@ class AuthService with ChangeNotifier {
   Future<bool> isLoggedIn() async {
     final token = await _storage.read(key: 'token') ?? '';
     debugPrint('Token::$token');
-    if ( token != '') {
-    final response = await dio.get(
-      '/login/renew',
-      options: Options(
-          headers: {'Content-Type': 'application/json', 'x-token': token}),
-    );
-    debugPrint('Tokenresp::$token');
+    if (token != '') {
+      final response = await dio.get(
+        '/login/renew',
+        options: Options(
+            headers: {'Content-Type': 'application/json', 'x-token': token}),
+      );
+      debugPrint('Tokenresp::$token');
       final loginResponse = loginResponseFromJson(response.data);
       usuario = loginResponse.usuario;
       await saveToken(loginResponse.token);

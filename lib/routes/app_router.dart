@@ -10,10 +10,6 @@ final appRouter = GoRouter(
       builder: (context, state) => const UsersPages(),
     ),
     GoRoute(
-      path: '/chat',
-      builder: (context, state) => const ChatPages(),
-    ),
-    GoRoute(
       path: '/login',
       builder: (context, state) => const LoginPages(),
     ),
@@ -24,6 +20,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/loading',
       builder: (context, state) => const LoadingPage(),
+    ),
+    GoRoute(
+      path: '/chat',
+      builder: (context, state) => const ChatPages(),
     ),
   ]
 );
