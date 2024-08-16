@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat/models/user_response.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:provider/provider.dart';
 
