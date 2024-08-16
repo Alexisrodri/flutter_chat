@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/models/mensajes_response.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:flutter_chat/services/chat_services.dart';
 import 'package:flutter_chat/services/socket_service.dart';
@@ -34,6 +35,23 @@ class _ChatPagesState extends State<ChatPages> with TickerProviderStateMixin {
       'mensaje-personal',
       (data) => _escucharMensaje(data),
     );
+    _cargarHistorial(chatServices.usuarioSelect.uid);
+  }
+
+  void _cargarHistorial(String userId) async {
+    List<Mensaje> chat = await chatServices.getChat(userId);
+    // print(chat);
+    final history = chat.map(
+      (e) => ChatMessage(
+          texto: e.mensage,
+          uid: e.from,
+          animationController: AnimationController(
+              vsync: this, duration: const Duration(milliseconds: 0))
+            ..forward()),
+    );
+    setState(() {
+      _messages.insertAll(0, history);
+    });
   }
 
   void _escucharMensaje(dynamic payload) {
@@ -154,7 +172,7 @@ class _ChatPagesState extends State<ChatPages> with TickerProviderStateMixin {
     // debugPrint('mensaje::$text');
     final newMessage = ChatMessage(
       texto: text,
-      uid: '123',
+      uid: authService.usuario.uid,
       animationController: AnimationController(
           vsync: this, duration: const Duration(milliseconds: 400)),
     );
@@ -174,7 +192,6 @@ class _ChatPagesState extends State<ChatPages> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-
     for (ChatMessage message in _messages) {
       message.animationController.dispose();
     }
