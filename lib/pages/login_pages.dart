@@ -80,7 +80,7 @@ class __FormState extends State<_Form> {
             type: TextInputType.visiblePassword,
           ),
           CustomButtom(
-            text: 'Ingrese',
+            text: 'Ingresar',
             background: Colors.blue,
             onPress: authService.authenticate
                 ? null

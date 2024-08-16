@@ -14,7 +14,7 @@ class LoadingPage extends StatelessWidget {
         future: checkLoginState(context),
         builder: (context, snapshot) {
           return const Center(
-            child: Text('espere...'),
+            child: CircularProgressIndicator(),
           );
         },
       ),

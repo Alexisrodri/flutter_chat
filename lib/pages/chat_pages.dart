@@ -115,57 +115,60 @@ class _ChatPagesState extends State<ChatPages> with TickerProviderStateMixin {
         ));
   }
 
-  _inputChat() {
-    return SafeArea(
-        child: Container(
+_inputChat() {
+  return SafeArea(
+    child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
-        children: [
+        children: <Widget>[
           Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: TextField(
-            controller: _textController,
-            onSubmitted: _handleSubmit,
-            onChanged: (String text) {
-              setState(() {
-                if (text.isNotEmpty) {
-                  _estaEscribiendo = true;
-                } else {
-                  _estaEscribiendo = false;
-                }
-              });
-            },
-            decoration: const InputDecoration.collapsed(
-              hintText: 'Enviar mensaje',
+                controller: _textController,
+                onChanged: (text) {
+                  setState(() {
+                    _estaEscribiendo = text.isNotEmpty;
+                  });
+                },
+                decoration: const InputDecoration.collapsed(
+                  hintText: 'Mensaje',
+                ),
+                focusNode: _focusNode,
+              ),
             ),
-            focusNode: _focusNode,
-          )),
+          ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 4),
+            margin: const EdgeInsets.only(left: 4),
             child: Platform.isIOS
                 ? CupertinoButton(
                     onPressed: _estaEscribiendo
                         ? () => _handleSubmit(_textController.text.trim())
                         : null,
-                    child: const Text('.'),
+                    child: const Text(
+                      'Enviar',
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   )
-                : IconTheme(
-                    data: IconThemeData(color: Colors.blue[400]),
-                    child: IconButton(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onPressed: _estaEscribiendo
-                            ? () => _handleSubmit(_textController.text.trim())
-                            : null,
-                        // color:,
-                        icon: const Icon(
-                          Icons.send_rounded,
-                        )),
+                : IconButton(
+                    icon: Icon(
+                      Icons.send,
+                      color: _estaEscribiendo ? Colors.blue : Colors.grey,
+                    ),
+                    onPressed: _estaEscribiendo
+                        ? () => _handleSubmit(_textController.text.trim())
+                        : null,
                   ),
-          )
+          ),
         ],
       ),
-    ));
-  }
+    ),
+  );
+}
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;

@@ -10,6 +10,7 @@ dependencies:
   dio: ^5.5.0+1
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   flutter_secure_storage: ^9.2.2
   go_router: ^14.2.2
   provider: ^6.1.2
@@ -20,6 +21,12 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/sms.png"
+  min_sdk_android: 21 # android min sdk min:16, defaul
 
 flutter:
   uses-material-design: true
