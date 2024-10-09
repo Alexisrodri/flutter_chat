@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat/models/user_response.dart';
 import 'package:flutter_chat/services/auth_services.dart';
 import 'package:flutter_chat/services/chat_services.dart';
-import 'package:flutter_chat/services/socket_service.dart';
+// import 'package:flutter_chat/services/socket_service.dart';
 import 'package:flutter_chat/services/usuarios_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -53,84 +53,113 @@ class _UsersPagesState extends State<UsersPages> {
 
   @override
   Widget build(BuildContext context) {
-    final usuario = Provider.of<AuthService>(context).usuario;
-    final socketService = Provider.of<SocketService>(context);
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(usuario.nombre),
-          centerTitle: true,
-          elevation: 1,
-          // backgroundColor: color,
-          leading: IconButton(
-            onPressed: () {
-              socketService.disconnect();
-              context.go('/login');
-              AuthService.deleteToken();
-            },
-            icon: const Icon(
-              Icons.exit_to_app_rounded,
-              color: Colors.redAccent,
-            ),
+    // final usuario = Provider.of<AuthService>(context).usuario;
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 100,
+            title: const Text('Chats'),
+            elevation: 1,
+            centerTitle: false,
+            actions: [
+              GestureDetector(
+                  onTap: () {
+                    context.push('/profile');
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(5),
+                        width: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.lightBlue),
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.lightBlue.shade600,
+                          backgroundImage: const NetworkImage(
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoqYHrsnp2ahUcv4XjDjFcgdROLRH6LhSDHg&s'),
+                        ),
+                      )))
+            ],
           ),
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              child: socketService.serverStatus == ServerStatus.offline
-                  ? const Icon(
-                      Icons.wifi_tethering_off_rounded,
-                      color: Colors.red,
-                    )
-                  : const Icon(
-                      Icons.wifi_tethering,
-                      color: Colors.green,
+          body: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Form(
+                  child: TextFormField(
+                    // autofocus: true,
+                    textInputAction: TextInputAction.search,
+                    onChanged: (value) {},
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: const Color(0xFF1D1D35).withOpacity(0.64),
+                      ),
+                      hintText: "Buscar",
+                      hintStyle: TextStyle(
+                        color: const Color(0xFF1D1D35).withOpacity(0.64),
+                      ),
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16.0 * 1.5, vertical: 16.0),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                      ),
                     ),
-            )
-          ],
-        ),
-        body: SmartRefresher(
-          controller: _refreshController,
-          onRefresh: () => _cargarUsuarios(),
-          header: WaterDropHeader(
-            complete: Icon(
-              Icons.check,
-              color: Colors.blue[400],
-            ),
-            waterDropColor: Colors.blue,
-          ),
-          child: _listViewUsuarios(),
-        ));
+                  ),
+                ),
+              ),
+              Expanded(
+                child: SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: () => _cargarUsuarios(),
+                  header: WaterDropHeader(
+                    complete: Icon(
+                      Icons.check,
+                      color: Colors.blue[400],
+                    ),
+                    waterDropColor: Colors.blue,
+                  ),
+                  child: _listViewUsuarios(),
+                ),
+              ),
+            ],
+          )),
+    );
   }
 
   ListView _listViewUsuarios() {
     return ListView.separated(
       physics: const BouncingScrollPhysics(),
       itemCount: usuarios.length,
-      separatorBuilder: (context, index) => const Divider(),
+      separatorBuilder: (context, index) => const Spacer(),
       itemBuilder: (context, index) => _usuarioListTile(usuarios[index]),
     );
   }
 
   ListTile _usuarioListTile(Usuario usuario) {
     return ListTile(
-      title: Text(usuario.nombre),
-      subtitle: Text(usuario.email),
-      onTap: () {
-        final chatService = Provider.of<ChatServices>(context,listen: false);
-        chatService.usuarioSelect = usuario;
-        context.push('/chat');
-      },
-      leading: CircleAvatar(
-        backgroundColor: Colors.blue[100],
-        child: Text(usuario.nombre.substring(0, 2)),
-      ),
-      trailing: Container(
-        height: 10,
-        width: 10,
-        decoration: BoxDecoration(
-            color: usuario.online ? Colors.green : Colors.redAccent,
-            borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+        title: Text(usuario.nombre),
+        subtitle: Text(
+          usuario.email,
+        ),
+        onTap: () {
+          final chatService = Provider.of<ChatServices>(context, listen: false);
+          chatService.usuarioSelect = usuario;
+          context.push('/chat');
+        },
+        leading: CircleAvatarWithActiveIndicator(
+          image:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoqYHrsnp2ahUcv4XjDjFcgdROLRH6LhSDHg&s',
+          isActive: usuario.online,
+        ),
+        trailing: const Icon(Icons.call));
   }
 
   _cargarUsuarios() async {
@@ -138,5 +167,45 @@ class _UsersPagesState extends State<UsersPages> {
     setState(() {});
     // await Future.delayed(const Duration(milliseconds: 200));
     _refreshController.refreshCompleted();
+  }
+}
+
+class CircleAvatarWithActiveIndicator extends StatelessWidget {
+  const CircleAvatarWithActiveIndicator({
+    super.key,
+    this.image,
+    this.radius = 24,
+    this.isActive,
+  });
+
+  final String? image;
+  final double? radius;
+  final bool? isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: radius,
+          backgroundImage: NetworkImage(image!),
+        ),
+        if (isActive!)
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              height: 16,
+              width: 16,
+              decoration: BoxDecoration(
+                color: const Color(0xFF00BF6D),
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: Theme.of(context).scaffoldBackgroundColor, width: 3),
+              ),
+            ),
+          )
+      ],
+    );
   }
 }

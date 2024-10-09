@@ -71,6 +71,7 @@ class __FormState extends State<_Form> {
             label: 'Email',
             icon: Icons.mail_outline,
             type: TextInputType.emailAddress,
+            background: const Color(0xFFF5FCF9),
           ),
           CustomInput(
             textController: passCtrl,
@@ -78,6 +79,7 @@ class __FormState extends State<_Form> {
             isPassword: true,
             icon: Icons.lock_outline_rounded,
             type: TextInputType.visiblePassword,
+            background: const Color(0xFFF5FCF9),
           ),
           CustomButtom(
             text: 'Ingresar',
@@ -90,10 +92,7 @@ class __FormState extends State<_Form> {
                         .login(emailCtrl.text.trim(), passCtrl.text.trim())
                         .then((login) => {
                               if (login)
-                                {
-                                  socketService.connect(),
-                                  context.go('/users')
-                                }
+                                {socketService.connect(), context.go('/users')}
                               else
                                 {
                                   customDialog(context, 'Login Error',

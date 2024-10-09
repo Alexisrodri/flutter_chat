@@ -24,14 +24,15 @@ class CustomInput extends StatelessWidget {
       padding: const EdgeInsets.only(top: 5, left: 15, bottom: 5, right: 20),
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                offset: const Offset(0, 5),
-                blurRadius: 5)
-          ]),
+        color: background,
+        borderRadius: BorderRadius.circular(30),
+        // boxShadow: [
+        //   BoxShadow(
+        //       color: Colors.black.withOpacity(0.05),
+        //       offset: const Offset(0, 5),
+        //       blurRadius: 5),
+        // ],
+      ),
       child: TextField(
         controller: textController,
         textAlignVertical: TextAlignVertical.center,

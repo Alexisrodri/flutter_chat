@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/routes/app_router.dart';
 import 'package:flutter_chat/services/auth_services.dart';
@@ -5,7 +7,10 @@ import 'package:flutter_chat/services/chat_services.dart';
 import 'package:flutter_chat/services/socket_service.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const MyApp(),
+    ));
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -19,6 +24,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ChatServices()),
       ],
       child: MaterialApp.router(
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
         routerConfig: appRouter,
         debugShowCheckedModeBanner: false,
         title: 'Material App',

@@ -70,105 +70,140 @@ class _ChatPagesState extends State<ChatPages> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final usuarioSelected = chatServices.usuarioSelect;
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 1,
-          centerTitle: true,
-          title: Column(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.blue[100],
-                maxRadius: 15,
-                child: Text(
-                  usuarioSelected.nombre.substring(0, 2),
-                  style: const TextStyle(fontSize: 12),
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black87,
+            toolbarHeight: 80,
+            foregroundColor: Colors.white,
+            elevation: 1,
+            centerTitle: true,
+            title: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.blue[100],
+                  maxRadius: 15,
+                  child: Text(
+                    usuarioSelected.nombre.substring(0, 2),
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 3,
-              ),
-              Text(
-                usuarioSelected.nombre,
-                style: const TextStyle(color: Colors.black87, fontSize: 12),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      usuarioSelected.nombre,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(usuarioSelected.online ? 'Online' : 'Offline',
+                        style: TextStyle(
+                          color: usuarioSelected.online
+                              ? Colors.green
+                              : Colors.blueGrey,
+                          fontSize: 12,
+                        )),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              Row(
+                children: [
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.call)),
+                  IconButton(
+                      onPressed: () {}, icon: const Icon(Icons.videocam)),
+                ],
               )
             ],
           ),
-        ),
-        body: Column(
-          children: [
-            Flexible(
-                child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) => _messages[index],
-              reverse: true,
-            )),
-            const Divider(
-              height: 1,
-            ),
-            SizedBox(
-              height: 100,
-              // color: Colors.amber,
-              child: _inputChat(),
-            )
-          ],
-        ));
+          body: Column(
+            children: [
+              Flexible(
+                  child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: _messages.length,
+                itemBuilder: (context, index) => _messages[index],
+                reverse: true,
+              )),
+              const Divider(
+                height: 1,
+              ),
+              SizedBox(
+                height: 100,
+                // color: Colors.amber,
+                child: _inputChat(),
+              )
+            ],
+          )),
+    );
   }
 
-_inputChat() {
-  return SafeArea(
-    child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: TextField(
-                controller: _textController,
-                onChanged: (text) {
-                  setState(() {
-                    _estaEscribiendo = text.isNotEmpty;
-                  });
-                },
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Mensaje',
+  _inputChat() {
+    return SafeArea(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.mic),
+              color: Colors.greenAccent.shade700,
+            ),
+            Flexible(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                focusNode: _focusNode,
+                child: TextField(
+                  controller: _textController,
+                  onChanged: (text) {
+                    setState(() {
+                      _estaEscribiendo = text.isNotEmpty;
+                    });
+                  },
+                  decoration: const InputDecoration.collapsed(
+                    hintText: 'Mensaje',
+                  ),
+                  focusNode: _focusNode,
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 4),
-            child: Platform.isIOS
-                ? CupertinoButton(
-                    onPressed: _estaEscribiendo
-                        ? () => _handleSubmit(_textController.text.trim())
-                        : null,
-                    child: const Text(
-                      'Enviar',
-                      style: TextStyle(color: Colors.blue),
+            Container(
+              margin: const EdgeInsets.only(left: 4),
+              child: Platform.isIOS
+                  ? CupertinoButton(
+                      onPressed: _estaEscribiendo
+                          ? () => _handleSubmit(_textController.text.trim())
+                          : null,
+                      child: const Text(
+                        'Enviar',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    )
+                  : IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        color: _estaEscribiendo ? Colors.blue : Colors.grey,
+                      ),
+                      onPressed: _estaEscribiendo
+                          ? () => _handleSubmit(_textController.text.trim())
+                          : null,
                     ),
-                  )
-                : IconButton(
-                    icon: Icon(
-                      Icons.send,
-                      color: _estaEscribiendo ? Colors.blue : Colors.grey,
-                    ),
-                    onPressed: _estaEscribiendo
-                        ? () => _handleSubmit(_textController.text.trim())
-                        : null,
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;

@@ -1,12 +1,13 @@
 name: flutter_chat
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.4 <4.0.0'
+  sdk: ">=3.4.4 <4.0.0"
 
 dependencies:
+  device_preview: 1.2.0
   dio: ^5.5.0+1
   flutter:
     sdk: flutter
