@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/models/user_response.dart';
-import 'package:flutter_chat/services/auth_services.dart';
+// import 'package:flutter_chat/services/auth_services.dart';
 import 'package:flutter_chat/services/chat_services.dart';
 // import 'package:flutter_chat/services/socket_service.dart';
 import 'package:flutter_chat/services/usuarios_services.dart';
