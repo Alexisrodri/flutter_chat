@@ -2,6 +2,12 @@
 
 Este proyecto es una aplicación de chat en tiempo real desarrollada con Flutter para el frontend y Node.js con Express para el backend. Utiliza Socket.IO para la comunicación en tiempo real y MongoDB/MongoDB Atlas para el almacenamiento de datos.
 
+## Preview
+
+
+https://github.com/user-attachments/assets/c44cd52a-233b-4b34-ba4f-2d927ea1aa23
+
+
 ## Características
 
 - **Chat en tiempo real**: Usa Socket.IO para la comunicación bidireccional entre el cliente (Flutter) y el servidor (Node.js).
