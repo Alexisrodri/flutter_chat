@@ -4,7 +4,7 @@ Este proyecto es una aplicación de chat en tiempo real desarrollada con Flutter
 
 ## Preview
 
-https://github.com/user-attachments/assets/d58f0ca2-0300-4c5a-add1-87d8ecf0c08f
+https://github.com/user-attachments/assets/32eeb4e3-220e-471b-9d57-e4267fc3faea
 
 ## Características
 
