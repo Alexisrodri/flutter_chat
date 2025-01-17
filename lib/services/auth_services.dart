@@ -53,7 +53,6 @@ class AuthService with ChangeNotifier {
       final loginResponse = loginResponseFromJson(response.data);
       usuario = loginResponse.usuario;
       await saveToken(loginResponse.token);
-      authenticate = false;
       return true;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {

@@ -4,11 +4,7 @@ class Logo extends StatelessWidget {
   final String src;
   final String label;
 
-  const Logo({
-    super.key, 
-    required this.src, 
-    required this.label
-  });
+  const Logo({super.key, required this.src, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +16,13 @@ class Logo extends StatelessWidget {
           children: [
             Image.asset(src),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
-             Text(
+            Text(
               label,
-              style: const TextStyle(fontSize: 30),
+              style: const TextStyle(
+                fontSize: 30,
+              ),
             )
           ],
         ),

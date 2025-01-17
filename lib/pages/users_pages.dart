@@ -54,92 +54,95 @@ class _UsersPagesState extends State<UsersPages> {
   @override
   Widget build(BuildContext context) {
     // final usuario = Provider.of<AuthService>(context).usuario;
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 100,
-            title: const Text('Chats'),
-            elevation: 1,
-            centerTitle: false,
-            actions: [
-              GestureDetector(
-                  onTap: () {
-                    context.push('/profile');
-                  },
-                  child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.all(5),
-                        width: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.lightBlue),
-                        ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.lightBlue.shade600,
-                          backgroundImage: const NetworkImage(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoqYHrsnp2ahUcv4XjDjFcgdROLRH6LhSDHg&s'),
-                        ),
-                      )))
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 100,
+        title: const Text('Chats'),
+        elevation: 1,
+        centerTitle: false,
+        actions: [
+          GestureDetector(
+              onTap: () {
+                context.push('/profile');
+              },
+              child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.all(5),
+                    width: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.lightBlue),
+                    ),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.lightBlue.shade600,
+                      backgroundImage: const NetworkImage(
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoqYHrsnp2ahUcv4XjDjFcgdROLRH6LhSDHg&s'),
+                    ),
+                  )))
+        ],
+      ),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: Form(
+              child: TextFormField(
+                // autofocus: true,
+                textInputAction: TextInputAction.search,
+                onChanged: (value) {},
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: const Color(0xFF1D1D35).withOpacity(0.64),
+                  ),
+                  hintText: "Buscar",
+                  hintStyle: TextStyle(
+                    color: const Color(0xFF1D1D35).withOpacity(0.64),
+                  ),
+                  filled: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0 * 1.5, vertical: 16.0),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                  ),
+                ),
+              ),
+            ),
           ),
-          body: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Form(
-                  child: TextFormField(
-                    // autofocus: true,
-                    textInputAction: TextInputAction.search,
-                    onChanged: (value) {},
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: const Color(0xFF1D1D35).withOpacity(0.64),
-                      ),
-                      hintText: "Buscar",
-                      hintStyle: TextStyle(
-                        color: const Color(0xFF1D1D35).withOpacity(0.64),
-                      ),
-                      filled: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0 * 1.5, vertical: 16.0),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                      ),
-                    ),
-                  ),
+          Expanded(
+            child: SmartRefresher(
+              controller: _refreshController,
+              onRefresh: () => _cargarUsuarios(),
+              header: WaterDropHeader(
+                complete: Icon(
+                  Icons.check,
+                  color: Colors.blue[400],
                 ),
+                waterDropColor: Colors.blue,
               ),
-              Expanded(
-                child: SmartRefresher(
-                  controller: _refreshController,
-                  onRefresh: () => _cargarUsuarios(),
-                  header: WaterDropHeader(
-                    complete: Icon(
-                      Icons.check,
-                      color: Colors.blue[400],
-                    ),
-                    waterDropColor: Colors.blue,
-                  ),
-                  child: _listViewUsuarios(),
-                ),
-              ),
-            ],
-          )),
+              child: _listViewUsuarios(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   ListView _listViewUsuarios() {
-    return ListView.separated(
+    return ListView.builder(
       physics: const BouncingScrollPhysics(),
       itemCount: usuarios.length,
-      separatorBuilder: (context, index) => const Spacer(),
-      itemBuilder: (context, index) => _usuarioListTile(usuarios[index]),
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: _usuarioListTile(usuarios[index]),
+        );
+      },
     );
   }
 
@@ -154,10 +157,15 @@ class _UsersPagesState extends State<UsersPages> {
           chatService.usuarioSelect = usuario;
           context.push('/chat');
         },
-        leading: CircleAvatarWithActiveIndicator(
-          image:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoqYHrsnp2ahUcv4XjDjFcgdROLRH6LhSDHg&s',
-          isActive: usuario.online,
+        leading: Stack(
+          alignment: Alignment.center,
+          children: [
+            CircleAvatarWithActiveIndicator(
+              image:
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoqYHrsnp2ahUcv4XjDjFcgdROLRH6LhSDHg&s',
+              isActive: usuario.online,
+            ),
+          ],
         ),
         trailing: const Icon(Icons.call));
   }
@@ -190,21 +198,23 @@ class CircleAvatarWithActiveIndicator extends StatelessWidget {
           radius: radius,
           backgroundImage: NetworkImage(image!),
         ),
-        if (isActive!)
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: Container(
-              height: 16,
-              width: 16,
-              decoration: BoxDecoration(
-                color: const Color(0xFF00BF6D),
-                shape: BoxShape.circle,
-                border: Border.all(
-                    color: Theme.of(context).scaffoldBackgroundColor, width: 3),
-              ),
-            ),
-          )
+        // if (isActive ?? false)
+        //   Positioned(
+        //     right: 0,
+        //     bottom: 0,
+        //     child: Container(
+        //       height: 16,
+        //       width: 16,
+        //       decoration: BoxDecoration(
+        //         color: const Color(0xFF00BF6D),
+        //         shape: BoxShape.circle,
+        //         border: Border.all(
+        //           color: Theme.of(context).scaffoldBackgroundColor,
+        //           width: 3,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
       ],
     );
   }
